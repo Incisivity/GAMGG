@@ -5,16 +5,35 @@ import sys
 import shutil
 from other.VERSION import VERSION
 
+import requests
+import zipfile
+import os
+import sys
+import shutil
+from other.VERSION import VERSION
+
 def get_latest_release_version(repo_owner, repo_name):
     api_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest'
     response = requests.get(api_url)
-    data = response.json()
 
-    # Print the API response for debugging
-    print("GitHub API Response:", data)
+    # Check if the response status code is successful
+    if response.status_code == 200:
+        data = response.json()
 
-    # Update this line based on the actual structure of the response
-    return data['tag_name']
+        # Print the GitHub API response for debugging
+        print("GitHub API Response:", data)
+
+        # Check if 'tag_name' is in the response
+        if 'tag_name' in data:
+            return data['tag_name']
+        else:
+            # Print a helpful message and return a placeholder version
+            print("Error: 'tag_name' not found in GitHub API response.")
+            return "UNKNOWN_VERSION"
+    else:
+        # Print an error message and return a placeholder version
+        print(f"Error: Failed to fetch latest release. Status code: {response.status_code}")
+        return "UNKNOWN_VERSION"
 
 def is_update_available(current_version, latest_version):
     return current_version < latest_version
