@@ -13,8 +13,7 @@ def load_key():
             return key_file.read()
     except FileNotFoundError:
         generate_key()
-        return load_key()  # Retry after generating the key
-
+        return load_key() 
 def encrypt(data, key):
     cipher_suite = Fernet(key)
     return cipher_suite.encrypt(data.encode())
@@ -45,15 +44,15 @@ def load_data(key):
             money, difficulty = map(int, decrypted_data.split(","))
             return money, difficulty
     except (FileNotFoundError, ValueError):
-        return 0, 1  # Default values if the file doesn't exist or is corrupted
+        return 0, 1  
 
 def main():
     key = load_key()
     total_money, difficulty = load_data(key)
-    session_earnings = 0  # Track earnings for the current session
+    session_earnings = 0  
 
     while True:
-        os.system("clear" if os.name == "posix" else "cls")  # Clear console screen
+        os.system("clear" if os.name == "posix" else "cls")  
 
         problem, correct_answer = generate_problem(difficulty)
 
@@ -67,13 +66,13 @@ def main():
             earned_money = random.randint(5, 20)
             total_money += earned_money
             session_earnings += earned_money
-            difficulty += 1  # Increase difficulty
+            difficulty += 1  
             print(f"Correct! You earned ${earned_money}. Your total money: ${total_money}")
         else:
             penalty = round(total_money * 0.1)
             total_money = max(0, total_money - penalty)
             session_earnings -= penalty
-            difficulty = max(1, difficulty - 1)  # Decrease difficulty, but not below 1
+            difficulty = max(1, difficulty - 1)  
             print(f"Wrong answer. Penalty: ${penalty}. Your total money remains ${total_money}")
 
         save_data(total_money, difficulty, key)
