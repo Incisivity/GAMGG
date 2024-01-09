@@ -1,5 +1,3 @@
-# other/updater.py
-
 import requests
 import zipfile
 import os
@@ -11,6 +9,11 @@ def get_latest_release_version(repo_owner, repo_name):
     api_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest'
     response = requests.get(api_url)
     data = response.json()
+
+    # Print the API response for debugging
+    print("GitHub API Response:", data)
+
+    # Update this line based on the actual structure of the response
     return data['tag_name']
 
 def is_update_available(current_version, latest_version):
